@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Homework 10</title>
+  </head>
+  <body>
+    <input type="text" id="search-box" />
+    <ul class="country-list"></ul>
+    <div class="country-info">
+      <img src="#" alt="flag" />
+      <h2 class="country-name"></h2>
+      <span class="country-capital"></span>
+      <span class="countre-population"></span>
+      <span class="countre-languages"></span>
+    </div>
+
+    <script src="index.js" type="module"></script>
+  </body>
+</html>
+<!-- fetch("https://restcountries.com/v3.1/all")
+  .then((response) => {
+    return response.json();
+  })
+  .then((el) => {
+    console.log(el);
+  })
+  .catch((error) => {
+    console.log(error);
+  }); -->
+<!-- fetch("https://restcountries.com/v3.1/all").then((response) => {
+  return response.json().then((el) => {
+    const markUp = el
+      .map(
+        ({ name, capital, population, languages, flags } = el) =>
+          `<li class="country-item">
+            <ul  class = "countri-description">
+            <li class = "countri-description-item">
+          
+            <img src=${flags.png} class="ikon"/>
+            <span class = "countre-name">${name.official}</span>
+            <span class = "countre-capital">${capital}</span>
+            <span class = "countre-population">${population}</span>
+            <span class = "countre-languages">${Object.values(languages)}</span>
+             </li>
+             </ul>
+          </li>`
+      ) 
+      .join("");
+
+    countryList.innerHTML = markUp;
+  });
+}); -->

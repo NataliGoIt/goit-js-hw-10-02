@@ -1,52 +1,60 @@
 import "../css/styles.css";
-// import { fetch } from "./fetchCountries";
-// import Notiflix from "notiflix";
+import { fetchCountries } from "./fetchCountries";
+import { Notify } from "notiflix/build/notiflix-notify-aio";
+import debounce from "lodash.debounce";
 const DEBOUNCE_DELAY = 300;
-// console.log(fetch);
+// // console.log(fetch);
 const inputCountre = document.querySelector("#search-box"),
   countryList = document.querySelector(".country-list"),
   countryInfo = document.querySelector(".country-info");
-// console.log(inputCountre);
-// console.log(countryList);
-// console.log(countryInfo);
-inputCountre.addEventListener("input", inputEntry);
+
+inputCountre.addEventListener("input", debounce(inputEntry, DEBOUNCE_DELAY));
 function inputEntry(e) {
-  console.log(e.values);
+  const value = e.target.value.trim();
+
+  if (value.length > 0) {
+    fetchCountries(value).then(fetchOk).catch(fetchError);
+  }
+  countryInfo.innerHTML = "";
+  countryList.innerHTML = "";
 }
-console.log(panjngjber);
-fetch("https://restcountries.com/v3.1/all")
-  .then((response) => {
-    return response.json();
-  })
-  .then((el) => {
-    markUpCountre(el);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-function markUpCountre(e) {
-  const markUp = e
-    .map(
-      ({ name, capital, population, languages, flags } = el) =>
-        `<li class="country-item">
-            <ul  class = "countri-description">
+
+function fetchError(error) {
+  Notify.failure("Oops, there is no country with that name");
+}
+function fetchOk(el) {
+  rendedrCard(el);
+}
+function rendedrCard(e) {
+  countryInfo.innerHTML = "";
+  countryList.innerHTML = "";
+  if (e.length > 10) {
+    Notify.info("Too many matches found. Please enter a more specific name.");
+    return;
+  } else if (e.length >= 2 && e.length <= 10) {
+    const markUp = e
+      .map(
+        ({ name, flags } = e) =>
+          `     <li class = "countri-item">
+                <img src=${flags.svg} class="ikon" alt = "Flag ${name.official}" width="50"/>
+                <h2 class = "countre-name">${name.official}</h2>
+                 </li>`
+      )
+      .join("");
+    countryList.innerHTML = markUp;
+  } else if (e.length === 1) {
+    const [{ name, capital, population, flags, languages }] = e;
+    console.log(name);
+    countryInfo.innerHTML = `
+            
             <li class = "countri-description-item">
-          
+
             <img src=${flags.svg} class="ikon" width="50"/>
-            <span class = "countre-name">${name.official}</span>
+            <h2 class = "countre-name">${name.official}</h2>
             <span class = "countre-capital">${capital}</span>
             <span class = "countre-population">${population}</span>
-            <span class = "countre-languages">${Object.values(languages)}</span>
+         <span class="countre-languages">${Object.values(languages)}</span>;
              </li>
-             </ul>
-          </li>`
-    )
-    .join("");
-  countryList.innerHTML = markUp;
-
-  // console.log(markUp);
+      `;
+  }
 }
-// ``;
-// <svg class="ikon" width="40" height="40">
-//               <use href=${flags.svg}></use>
-//           </svg>
